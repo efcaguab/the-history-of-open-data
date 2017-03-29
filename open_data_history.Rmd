@@ -1,0 +1,278 @@
+---
+title: "The global status of open government data"
+author: "Fernando Cagua"
+date: "March 2017"
+output:
+  pdf_document: default
+  html_document: default
+header-includes:
+- \usepackage{setspace}
+bibliography: references.bib
+---
+
+\onehalfspacing
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(magrittr)
+library(ggrepel)
+library(stringdist)
+library(survival)
+library(pec)
+
+fer_theme <- theme_bw() +
+	theme(text = element_text(family = "Helvetica"),
+	      title = element_text(size = 7, hjust = 0),
+	      legend.title = element_text(size = 8),
+	      legend.text = element_text(size = 7),
+				axis.text = element_text(size = 7),
+				axis.title = element_text(size = 8, hjust = 0.5),
+				strip.text = element_text(size = 8, hjust = 0),
+				strip.background = element_blank(),
+				plot.margin = grid::unit(c(5, 0.5, 2, 0), "mm"),
+				panel.grid = element_blank()
+				)
+```
+
+In order to fulfill their functions, governments tend to collect large amounts of data that are high in volume, variety, veracity, and arguably velocity.
+Hence, government data as a whole seems to be a good candidate to receive the "big data" label.
+Nevertheless, the government data has the potential to be big data for another, perhaps more important, criterium—value.
+
+Few organizations have the potential that government has to use their data to transform society.
+It has been shown that the value of government datasets can be even larger when they are open (being open means that they can be freely used and shared by anyone).
+This is so because the benefits of open data are not only for the civil society, but also for the government itself and range from transparency improvements, to citizen empowerment, passing by public service improvement and indirect effects in the wider economy [@Ubaldi2013].
+For example, the potential global value of open data has been estimated to be $3 trillion [@Chui2013], and 100,000 direct jobs would be created by 2020 in Europe alone [@Carrara2015].
+
+Despite the clear advantages, a large proportion of countries still have a limited or inexistent public open data infrastructure.
+While many civic initiatives attempt to ameliorate this issue by sharing independently collected data, they are usually unable to substitute the value of government datasets.
+Large initiatives like the [Global Partnership for Sustainable Development Data](http://www.data4sdgs.org/)—which unite governments and NGOs with the aim of fostering the applications of open government data to achieve the 2030 UN sustainable development goals–are trying to remedy the situation.
+In a prime example, the [Open Government Partnership](https://www.opengovpartnership.org), a multi-country alliance in which governments commit to be "more open, accountable, and responsive to citizens", has grown from eight countries in 2011 to 75 in 2016 [@OGP2016].
+
+More and more governments are committing to open public data, certainly important progress.
+However, monitoring the *actual* progress to which government data is being made open is more challenging.
+Currently, three indexes attempt to quantify this progress.
+The [Open Data Inventory](http://odin.opendatawatch.com/) includes 173 countries and focus on gaps on the official statistics provided by the national statistics offices [@ODW2016].
+The [Open Data Barometer](http://opendatabarometer.org/) includes 92 countries and relies on expert assessment which inform on the readiness, implementation, and impact of open data [@OBD2015].
+Finally, the [Open Data Index](http://index.okfn.org/) includes 122 countries and relies on peer-reviewed crowdsourced data from individuals and citizen initiatives. It goes beyond national statistics and evaluates the status of open data on dimensions like legislation, GIS, pollutants, land ownership, etc [@Foundation2017].
+
+Although these indices provide important insight into the current status of open government data, they do not provide all the information required to analyze its evolution because many governments embraced open data policies before the indices were developed.
+Understanding the macro factors that drive the implementation of open government data, and predicting future trends, would be an valuable asset to design strategies to speed up the adoption of the "data revolution" across countries.
+
+```{r}
+country_names <- readr::read_csv("./data/official_country_names.csv")
+
+data_history <- readr::read_csv("./data/open_data_history.csv")
+# manually fix weird names
+alternative_country_names <- "./data/alternative_country_names.csv" %>%
+	readr::read_csv()
+data_history %<>%
+	dplyr::left_join(alternative_country_names) %>%
+	dplyr::mutate(country_name = dplyr::if_else(
+		is.na(country_name),
+		Country,
+		country_name
+	))
+dm <- stringdistmatrix(tolower(country_names$name),
+					 tolower(data_history$country_name), method = "osa",
+					 weight = c(d = 1, i = 0.1, s = 1, t = 1))
+
+data_history$official_name <- NA
+for(i in 1:ncol(dm)){
+	data_history$official_name[i] <- country_names$name[which.min(dm[, i])]
+}
+
+data_history %<>%
+	dplyr::left_join(country_names, by = c("official_name" = "name"))
+```
+
+```{r}
+odi <- readr::read_csv("./data/open_data_index.csv") %>%
+	dplyr::mutate(id = toupper(id)) %>%
+	dplyr::rename(odi_country_name = name,
+								odi_region = region,
+								odi_rank = rank)
+
+odb <- readr::read_csv("./data/odb_index.csv") %>%
+	dplyr::select(-Region, -Country)
+
+data_history %<>%
+	dplyr::mutate(i_start_date = dplyr::if_else(is.na(start_date),
+																							Sys.Date(),
+																							start_date),
+								date_rank = rank(i_start_date, ties.method = "average"))
+
+rank_comparison <- data_history %>%
+	dplyr::left_join(odi, by = c("alpha2" = "id")) %>%
+	dplyr::left_join(odb, by = c("alpha3" = "ISO3"))
+
+odi_cor <- rank_comparison %$%
+	cor(as.numeric(i_start_date), as.numeric(as.character(score_2014)),
+			method = "spearman", use = "complete.obs")
+
+obd_cor <- rank_comparison %$%
+	cor(as.numeric(i_start_date), ODB.Score.Scaled,
+			method = "spearman", use = "complete.obs")
+
+```
+
+Here, I do precisely that.
+Specifically, I use the date in which a country opened an open government data portal (such as [data.govt.nz](https://data.govt.nz/)) as a proxy for a country support for open data.
+Although the opening date is not able to accurately measure the quantity and quality of public data, I found it to be highly correlated with both the Open Data Index and the Open Data Barometer (Spearman correlation coefficient of `r -round(odi_cor, 2)` and `r -round(obd_cor, 2)`, respectively).
+Open data portals are a good indication of the progress of open data because–by making datasets discoverable and managing metadata–they have the potential to accelerate the creation of value [@Attard2015].
+
+To obtain the web address of the open data portals were open I curated an automated search that returned the 10 first results of a Google Search in an english locale for the string "`Open Data + [country]`" for each of the 193 United Nations meber states.
+I then obtained an approximate opening date for the portal by automatically retrieving the date in which the site was first registered by the Wayback Machine, which keeps historical snapshots of billions of URLs over time.
+
+```{r}
+read_wb <- function(file, varname) {
+	file %>%
+		readr::read_csv(skip = 4) %>%
+		dplyr::select(dplyr::contains("Country Code"), 
+									dplyr::matches("[0-9]")) %>% 
+		reshape2::melt("Country Code", variable.name = "year", value.name = "var") %>%
+		dplyr::filter(!is.na(var)) %>%
+		dplyr::group_by(`Country Code`) %>%
+		dplyr::mutate(year = as.numeric(as.character(year)),
+									last_year = max(year), 
+									var = as.numeric(as.character(var))) %>%
+		dplyr::filter(year == last_year) %>%
+		dplyr::select(-last_year) %>%
+		dplyr::rename_(.dots = setNames("var", varname)) %>%
+		dplyr::rename_(.dots = setNames("year", paste("year", varname, sep = ".")))
+}
+
+netp <- read_wb("./data/wb_net_penetration.csv", "netp")
+gdp <- read_wb("./data/wb_gdp_per_capita.csv", "gdppc")
+pop <- read_wb("./data/wb_population_size.csv", "pop")
+
+
+
+study_start <- data_history$start_date %>% min(na.rm = T) - 2
+study_end <- as.Date("2017-03-28")
+surv_history <- data_history %>%
+	dplyr::left_join(netp, by = c("alpha3" = "Country Code")) %>% 
+	dplyr::left_join(gdp, by = c("alpha3" = "Country Code")) %>%
+	dplyr::left_join(pop, by = c("alpha3" = "Country Code")) %>% 
+	dplyr::mutate(time = 1,
+								time2 = difftime(start_date, study_start, units = "day"),
+								time2 = ifelse(is.na(time2), 
+															 difftime(study_end, study_start, units = "day"),
+															 time2),
+								event = ifelse(is.na(start_date),0,1),
+								tnetp = netp + 2) %>%
+	dplyr::filter(!is.na(netp), !is.na(gdppc))
+S <- surv_history %$% 
+	Surv(time, time2, event)
+
+cm <- coxph(Surv(time, time2, event) ~ gdppc + pop + netp, data = surv_history)
+aft0w <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history)
+aft0e <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "exp")
+aft0g <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "gau")
+aft0l <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "logistic")
+aft0n <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "logn")
+aft0o <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "loglog")
+
+aft1 <- survreg(Surv(time2, event) ~  gdppc + pop , data = surv_history)
+aft2 <- survreg(Surv(time2, event) ~ pop + tnetp, data = surv_history)
+aft3w <- survreg(Surv(time2, event) ~ gdppc + tnetp, data = surv_history)
+aft3l <- survreg(Surv(time2, event) ~ gdppc + tnetp, data = surv_history, dist = "logistic")
+aft4w <- survreg(Surv(time2, event) ~ tnetp, data = surv_history)
+aft4l <- survreg(Surv(time2, event) ~ tnetp, data = surv_history, dist = "logistic")
+aft5 <- survreg(Surv(time2, event) ~ pop, data = surv_history)
+aft6 <- survreg(Surv(time2, event) ~ gdppc, data = surv_history)
+
+AIC(aft0, aft1, aft2, aft3, aft4, aft5, aft6)
+
+survfit(aft)
+a <- cox.zph(model0)
+par(mfrow = c(3, 1))
+plot(a[1], main = "gdppc")
+plot(a[2], main = "pop")
+plot(a[3], main = "netp")
+
+plot(residuals(model0, type = "deviance"), 
+		 residuals(model0, type = "martingale"))
+
+predictSurvProb(model0, surv_history, times = 1:5000)
+
+prob <- surv_history %>% 
+	dplyr::filter(is.na(start_date), 
+								region == "Europe") %T>% View %>%
+	predictSurvProb(model0, ., 
+									times = seq(difftime(study_end, study_start, units = "day"),
+															by = 365.25, length.out = 10))
+```
+
+
+```{r}
+cum_history <- data_history %>%
+	dplyr::arrange(start_date) %>%
+	plyr::ddply("region", function(x){
+			d <- dplyr::data_frame(dens = ecdf(x$start_date)(unique(x$start_date)),
+											 start_date = unique(x$start_date)) %>%
+			dplyr::mutate(n = dens * (sum(!is.na(x$start_date))),
+										prop = n/nrow(x)) %>%
+				dplyr::filter(!is.na(start_date))
+			d %>%
+				dplyr::bind_rows(dplyr::data_frame(dens = 1,
+																					 start_date = Sys.Date(),
+																					 n = max(d$n),
+																					 prop = max(d$prop))) %>%
+				dplyr::bind_rows(dplyr::data_frame(dens = 0,
+																					 start_date = min(data_history$start_date-90, na.rm = T),
+																					 n = 0,
+																					 prop = 0))
+	})
+
+
+```
+
+```{r, fig.height= 2.5, fig.width=3.5, fig.cap= "Realised national-level open data initiatives."}
+
+lege <- cum_history %>%
+	dplyr::group_by(region) %>%
+	dplyr::mutate(max_prop = max(prop)) %>%
+	dplyr::filter(prop == max_prop,
+								start_date == Sys.Date()) %>%
+	dplyr::mutate(n_tot = n/prop,
+								message = paste0(region, " (", n, "/", n_tot, ")"))
+
+cum_history %>%
+	ggplot(aes(x = start_date)) +
+	geom_step(aes(y = prop,
+							 colour = region), position = "identity") +
+	ylab("proportion of countries") +
+	scale_x_date(name = "", limits = c(min(data_history$start_date-90, na.rm = T),
+																		 Sys.Date() + 700)) +
+	scale_y_continuous(labels = scales::percent) +
+
+	# geom_point(data = data_history,
+	# 								aes(x = start_date, y = -0.05), size = 0.5) +
+	geom_label_repel(data = lege,
+									aes(x = start_date, y = prop, label = message, colour = region),
+									angle =0, size = 2,
+									nudge_x = 350,
+									# segment.color = NA,
+									segment.size = 0.5,
+									segment.alpha = 0.5,
+									point.padding = unit(0.5, "lines")) +
+	scale_color_brewer(palette = "Set1") +
+	# ggtitle("National level open government initiatives") +
+	fer_theme +
+	theme(legend.position = "none")
+
+
+```
+
+# The pioneers
+
+```{r}
+data_history %>%
+	dplyr::arrange(start_date) %>%
+	dplyr::slice(1:10) %>%
+	dplyr::select(alpha3, address, start_date, region) %>%
+	knitr::kable()
+```
+
+# References
