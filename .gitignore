@@ -1,2 +1,10 @@
 
 *\.DS_Store
+.Rproj.user
+packrat/lib*/
+
+\.Rhistory
+
+\.RData
+
+open_data_history\.Rproj
