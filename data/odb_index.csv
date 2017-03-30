@@ -1,0 +1,93 @@
+,Region,ISO2,ISO3,ODB.Rank,Country,ODB.Score.Scaled,ODB.Score.Change,Rank.Change,Readiness.Scaled,Implementation.Scaled,Impact.Scaled,Readiness.Policies.Scaled,Readiness.Action.Scaled,Readiness.Civil.Scaled,Readiness.Business.Scaled,Readiness.Rank,Implementation.Innovation.Scaled,Implementation.Social.Scaled,Implementation.Accountability.Scaled,Implementation.Datasets_Average,Implementation.Rank,Impact.Political.Scaled,Impact.Social.Scaled,Impact.Economic.Scaled,Impact.Rank
+2015,Europe & Central Asia,GB,GBR,1,United Kingdom,100,0,0,100,100,100,100,95,96,100,1,93,95,93,93.67,1,100,90,100,1
+2015,North America,US,USA,2,United States of America,81.89,-10.77,0,97,76,76,94,100,89,96,3,81,70,67,72.67,7,70,62,87,4
+2015,Europe & Central Asia,FR,FRA,2,France,81.65,1.44,2,97,76,74,90,99,99,92,2,79,79,61,73.00,6,100,43,74,5
+2015,North America,CA,CAN,4,Canada,80.35,5.83,3,89,84,67,88,91,87,83,7,95,84,61,80.00,2,60,95,41,8
+2015,Europe & Central Asia,DK,DNK,5,Denmark,76.62,6.49,4,77,77,78,64,67,84,88,18,76,87,57,73.33,5,80,71,74,3
+2015,East Asia & Pacific,NZ,NZL,6,New Zealand,76.35,-3.66,-2,87,62,87,93,79,96,77,9,51,78,52,60.33,14,80,100,74,2
+2015,Europe & Central Asia,NL,NLD,7,Netherlands,75.13,-0.66,-1,90,69,70,79,88,97,89,5,60,85,55,66.67,9,70,57,74,7
+2015,East Asia & Pacific,KR,KOR,8,Korea (Republic of),71.19,13.54,9,95,64,58,97,98,92,86,4,60,76,52,62.67,12,60,45,62,13
+2015,Europe & Central Asia,SE,SWE,9,Sweden,69.26,-14.44,-6,88,60,64,85,83,100,79,8,62,79,36,59.00,15,50,98,41,10
+2015,East Asia & Pacific,AU,AUS,10,Australia,67.99,-0.34,0,84,77,39,82,96,81,75,10,85,75,61,73.67,4,40,19,53,20
+2015,Europe & Central Asia,FI,FIN,11,Finland,65.45,-1.04,1,90,65,42,85,83,100,87,6,73,63,54,63.33,11,30,36,54,18
+2015,Europe & Central Asia,DE,DEU,11,Germany,64.79,-2.84,-1,77,71,45,62,71,96,78,17,75,75,55,68.33,8,60,38,34,17
+2015,Europe & Central Asia,ES,ESP,13,Spain,64.35,4.46,0,78,57,63,67,92,83,68,15,53,62,53,56.00,19,30,52,95,12
+2015,Europe & Central Asia,AT,AUT,13,Austria,64.18,5.66,2,81,49,70,79,85,83,74,11,73,35,41,49.67,26,70,88,47,6
+2015,East Asia & Pacific,JP,JPN,13,Japan,63.5,9.92,6,77,53,65,71,73,88,76,16,61,48,51,53.33,20,70,71,49,9
+2015,Latin America & Caribbean,MX,MEX,16,Mexico,61.76,11.67,8,69,57,63,72,68,80,58,22,62,54,52,56.00,18,80,60,47,11
+2015,Latin America & Caribbean,BR,BRA,17,Brazil,61.16,9.03,4,60,80,36,54,61,67,61,28,63,88,78,76.33,3,50,26,31,22
+2015,Europe & Central Asia,NO,NOR,17,Norway,60.6,-13.99,-10,80,58,46,82,76,87,74,14,71,62,38,57.00,16,100,10,28,15
+2015,Latin America & Caribbean,UY,URY,19,Uruguay,58.12,8.75,6,68,65,39,55,68,90,60,23,68,83,40,63.67,10,80,0,36,19
+2015,Europe & Central Asia,CH,CHE,20,Switzerland,54.64,3.31,2,74,58,31,82,52,86,78,20,67,68,36,57.00,17,30,19,41,25
+2015,Europe & Central Asia,IT,ITA,21,Italy,53.78,3.2,1,67,52,45,65,74,74,56,24,45,56,54,51.67,23,80,19,34,16
+2015,Europe & Central Asia,IS,ISL,22,Iceland,52.73,6.16,5,64,62,29,43,59,87,69,25,73,64,45,60.67,13,20,0,62,26
+2015,Europe & Central Asia,BE,BEL,22,Belgium,52.62,5.33,5,80,48,33,65,82,90,81,13,47,49,49,48.33,27,20,26,47,23
+2015,East Asia & Pacific,SG,SGP,24,Singapore,51.45,5.39,5,72,51,32,77,77,41,87,21,64,67,23,51.33,25,20,43,31,24
+2015,Europe & Central Asia,EE,EST,24,Estonia,50.63,-9.55,-11,75,52,24,71,62,95,73,19,52,67,38,52.33,21,30,10,31,30
+2015,Europe & Central Asia,CZ,CZE,26,Czech Republic,49.15,-8.92,-9,59,43,50,53,49,83,56,31,47,33,52,44.00,31,60,29,56,14
+2015,Europe & Central Asia,IE,IRL,27,Ireland,46.53,5.79,4,81,52,5,79,69,96,77,12,57,74,26,52.33,22,0,0,13,57
+2015,Latin America & Caribbean,CO,COL,28,Colombia,45.39,13.01,12,64,47,26,89,63,63,44,27,64,41,39,48.00,28,40,26,11,29
+2015,Middle East & North Africa,IL,ISR,29,Israel,43.71,-9.26,-9,60,37,39,59,55,66,62,30,37,38,42,39.00,39,50,0,62,21
+2015,Latin America & Caribbean,CL,CHL,30,Chile,42.97,-15.73,-15,64,51,12,54,61,80,62,26,59,44,51,51.33,24,30,0,5,45
+2015,Europe & Central Asia,PT,PRT,31,Portugal,41.38,-4.74,-2,59,45,20,53,50,77,60,32,54,58,26,46.00,29,10,36,13,37
+2015,Europe & Central Asia,PL,POL,32,Poland,39.95,2.96,3,57,42,21,39,53,79,61,33,33,69,29,43.67,33,20,10,31,33
+2015,Europe & Central Asia,GR,GRC,33,Greece,38.48,-2.31,-2,60,38,18,45,62,76,60,29,52,46,23,40.33,37,50,0,5,38
+2015,Europe & Central Asia,MD,MDA,33,Moldova (Republic of),38.43,,,53,44,18,59,46,70,42,36,54,52,30,45.33,30,40,0,13,39
+2015,Europe & Central Asia,MK,MKD,33,Macedonia,38.13,,,52,42,20,63,35,72,46,38,33,62,36,43.67,32,30,19,11,36
+2015,Europe & Central Asia,SK,SVK,36,Slovak Republic,37.16,,,54,33,28,46,44,84,47,35,32,39,36,35.67,45,50,10,23,28
+2015,East Asia & Pacific,PH,PHL,36,Philippines,36.94,13.75,17,55,32,28,62,51,57,53,34,49,26,29,34.67,46,40,17,26,27
+2015,South Asia,IN,IND,38,India,33.98,0.83,1,48,39,14,66,50,56,31,39,47,54,22,41.00,36,0,10,29,41
+2015,Middle East & North Africa,TN,TUN,39,Tunisia,33.37,4.8,6,46,34,21,31,60,66,37,41,38,51,21,36.67,43,50,0,13,34
+2015,East Asia & Pacific,ID,IDN,40,Indonesia,31.81,-4.37,-4,46,36,14,54,46,61,31,42,48,46,21,38.33,40,30,0,11,42
+2015,Europe & Central Asia,RU,RUS,41,Russian Federation,31.49,-16.76,-15,52,31,13,57,62,42,50,37,40,49,13,34.00,47,20,0,18,43
+2015,Latin America & Caribbean,EC,ECU,42,Ecuador,30.29,-4.74,-4,39,42,7,54,36,47,32,51,31,56,42,43.00,34,10,0,11,50
+2015,Sub-Saharan Africa,KE,KEN,42,Kenya,29.87,4.07,7,45,27,21,46,46,45,49,44,15,32,44,30.33,51,30,0,31,32
+2015,Latin America & Caribbean,PE,PER,44,Peru,28.93,-8.81,-11,43,41,0,33,41,69,38,47,51,43,33,42.33,35,0,0,0,81
+2015,Latin America & Caribbean,CR,CRI,44,Costa Rica,28.52,-2.74,-3,43,38,2,20,44,71,45,46,41,39,40,40.00,38,0,0,5,64
+2015,Sub-Saharan Africa,RW,RWA,46,Rwanda,27.55,-0.5,0,35,36,11,67,31,24,30,60,20,62,32,38.00,41,10,17,5,47
+2015,Europe & Central Asia,TR,TUR,47,Turkey,27.06,-4.18,-6,37,36,6,27,35,43,52,55,44,47,23,38.00,42,10,10,0,52
+2015,Middle East & North Africa,AE,ARE,47,UAE,27,2.14,5,47,29,7,55,55,16,63,40,31,46,19,32.00,49,20,0,0,51
+2015,Sub-Saharan Africa,ZA,ZAF,47,South Africa,26.77,-3.93,-6,41,20,24,17,35,66,52,50,38,13,23,24.67,54,0,43,26,31
+2015,Europe & Central Asia,HU,HUN,50,Hungary,25.54,-12.72,-17,35,34,6,25,32,54,40,59,45,51,13,36.33,44,20,0,0,53
+2015,East Asia & Pacific,MY,MYS,51,Malaysia,24.6,-6.16,-10,46,17,16,55,45,30,58,43,30,23,13,22.00,57,10,26,11,40
+2015,Latin America & Caribbean,AR,ARG,52,Argentina,23.78,-11.93,-16,42,21,11,18,56,62,39,49,23,20,33,25.33,53,10,10,13,46
+2015,Sub-Saharan Africa,MU,MUS,53,Mauritius,22.33,0.47,1,38,29,0,56,25,43,38,54,30,43,23,32.00,48,0,0,0,76
+2015,Latin America & Caribbean,JM,JAM,53,Jamaica,21.65,-4.61,-4,36,14,20,21,23,55,53,58,25,21,12,19.33,63,10,17,31,35
+2015,East Asia & Pacific,CN,CHN,55,China,21.16,-6.96,-9,45,15,8,36,57,38,52,45,22,28,10,20.00,61,10,10,5,48
+2015,Europe & Central Asia,KZ,KAZ,56,Kazakhstan,20.09,-5.78,-7,29,28,3,36,40,23,28,64,20,42,31,31.00,50,0,0,8,62
+2015,East Asia & Pacific,VN,VNM,57,Vietnam,18.3,0.07,0,21,23,12,33,19,16,28,74,19,36,26,27.00,52,20,17,0,44
+2015,Middle East & North Africa,BH,BHR,57,Bahrain,18.14,2.76,4,36,20,0,43,51,5,52,56,21,39,12,24.00,55,0,0,0,66
+2015,Middle East & North Africa,SA,SAU,57,Saudi Arabia,17.72,1.95,2,39,17,0,64,52,0,47,52,31,24,9,21.33,59,0,0,0,83
+2015,Europe & Central Asia,GE,GEO,60,Georgia,16.79,,,38,15,0,35,41,64,25,53,13,34,13,20.00,62,0,0,0,72
+2015,Middle East & North Africa,QA,QAT,60,Qatar,16.53,2.56,4,42,12,0,71,32,15,56,48,13,31,7,17.00,70,0,0,0,82
+2015,Middle East & North Africa,MA,MAR,62,Morocco,16.17,-4.94,-7,36,13,3,26,45,44,38,57,13,28,13,18.00,68,10,0,0,60
+2015,Europe & Central Asia,UA,UKR,62,Ukraine,16.07,-5.16,-7,28,17,5,9,32,60,23,66,32,11,23,22.00,58,10,0,5,56
+2015,Latin America & Caribbean,PY,PRY,62,Paraguay,15.99,,,30,16,5,25,23,40,41,63,18,7,37,20.67,60,10,0,5,55
+2015,East Asia & Pacific,TH,THA,62,Thailand,15.99,-2.2,-5,30,19,0,24,31,30,45,61,25,32,13,23.33,56,0,0,0,87
+2015,Latin America & Caribbean,LC,LCA,66,Saint Lucia,14.65,,,27,14,6,27,20,37,35,68,19,26,13,19.33,64,0,17,0,54
+2015,Sub-Saharan Africa,NG,NGA,67,Nigeria,14.13,2.6,1,29,13,3,26,26,36,38,65,10,35,11,18.67,65,10,0,0,61
+2015,South Asia,NP,NPL,68,Nepal,13.09,-1.47,-7,22,12,8,12,17,51,24,72,17,10,26,17.67,69,10,0,13,49
+2015,Sub-Saharan Africa,TZ,TZA,69,Tanzania,10.77,-0.92,-1,21,13,0,21,30,23,21,75,10,35,11,18.67,66,0,0,0,86
+2015,Sub-Saharan Africa,SN,SEN,70,Senegal,10.33,-0.23,4,22,12,0,23,11,43,26,73,18,22,11,17.00,71,0,0,0,84
+2015,Middle East & North Africa,JO,JOR,70,Jordan,10.32,-5.17,-9,27,8,0,35,27,18,38,67,15,13,13,13.67,80,0,0,0,74
+2015,Sub-Saharan Africa,GH,GHA,70,Ghana,10.19,-17.8,-24,30,3,3,29,19,63,23,62,8,10,11,9.67,87,10,0,0,58
+2015,Sub-Saharan Africa,BF,BFA,70,Burkina Faso,10.12,-1.2,4,26,8,0,23,30,42,23,69,9,19,13,13.67,78,0,0,0,70
+2015,Sub-Saharan Africa,UG,UGA,70,Uganda,9.92,-4.54,-6,24,9,0,26,16,40,28,70,20,13,11,14.67,77,0,0,0,88
+2015,Middle East & North Africa,EG,EGY,75,Egypt,8.74,-5.43,-11,16,11,2,4,26,18,27,82,10,16,23,16.33,73,0,0,5,65
+2015,Sub-Saharan Africa,BJ,BEN,76,Benin,8.47,-3.51,-8,14,13,0,16,3,40,13,84,18,17,20,18.33,67,0,0,0,68
+2015,Sub-Saharan Africa,MZ,MOZ,76,Mozambique,8.14,-8.06,-17,18,9,0,14,18,31,22,80,23,14,8,15.00,76,0,0,0,77
+2015,Sub-Saharan Africa,MW,MWI,78,Malawi,7.39,-4.76,-10,12,10,3,20,10,22,12,88,25,11,11,15.67,74,0,0,8,63
+2015,Sub-Saharan Africa,,NAM,78,Namibia,7.35,-2.09,-1,23,3,0,19,23,33,30,71,10,9,11,10.00,85,0,0,0,79
+2015,South Asia,BD,BGD,78,Bangladesh,7.05,-4.45,-10,17,7,0,23,13,35,15,81,15,11,13,13.00,81,0,0,0,67
+2015,Latin America & Caribbean,VE,VEN,78,Venezuela,6.79,-5.66,-10,12,10,0,1,24,17,21,86,20,20,7,15.67,75,0,0,0,89
+2015,Sub-Saharan Africa,ET,ETH,78,Ethiopia,6.63,-1.12,0,20,4,0,24,28,25,17,76,9,11,11,10.33,83,0,0,0,71
+2015,Sub-Saharan Africa,CM,CMR,78,Cameroon,6.57,2.8,5,12,8,3,21,11,8,22,87,14,16,11,13.67,79,10,0,0,59
+2015,Sub-Saharan Africa,BW,BWA,78,Botswana,6.51,-1.88,0,18,5,0,27,19,20,22,79,10,13,11,11.33,82,0,0,0,69
+2015,South Asia,PK,PAK,85,Pakistan,6.23,-6.38,-18,19,3,0,11,19,29,31,78,12,5,13,10.00,86,0,0,0,80
+2015,Sub-Saharan Africa,SL,SLE,86,Sierra Leone,5.45,-2.09,-8,19,2,0,34,20,42,0,77,7,9,9,8.33,91,0,0,0,85
+2015,Sub-Saharan Africa,ZM,ZMB,86,Zambia,4.91,-2.82,-8,16,3,0,30,5,21,22,83,8,10,11,9.67,88,0,0,0,91
+2015,Sub-Saharan Africa,ML,MLI,88,Mali,3.98,0.68,-4,13,3,0,24,4,26,15,85,6,13,9,9.33,89,0,0,0,75
+2015,East Asia & Pacific,MM,MMR,88,Myanmar,3.56,3.56,-2,0,11,0,9,0,8,3,92,18,24,8,16.67,72,0,0,0,78
+2015,Sub-Saharan Africa,ZW,ZWE,90,Zimbabwe,3.38,-6.27,-14,11,3,0,13,15,15,17,89,7,10,11,9.33,90,0,0,0,92
+2015,Middle East & North Africa,YE,YEM,91,Yemen,1.43,-4.37,-9,3,4,0,0,11,8,10,91,10,9,12,10.33,84,0,0,0,90
+2015,Latin America & Caribbean,HT,HTI,92,Haiti,0,-1.19,-7,4,0,0,4,3,7,17,90,7,6,8,7.00,92,0,0,0,73
