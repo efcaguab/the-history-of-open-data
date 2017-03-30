@@ -1,15 +1,14 @@
 ---
-title: "The global status of open government data"
-author: "Fernando Cagua"
-date: "March 2017"
+title: "The present and future status of open government data"
+author: "STAT 448, Assignment 1-2, Fernando Cagua, March 2017"
 output:
   pdf_document: default
   html_document: default
 header-includes:
 - \usepackage{setspace}
 bibliography: references.bib
+urlcolor: magenta
 ---
-
 \onehalfspacing
 
 ```{r setup, include=FALSE}
@@ -19,7 +18,11 @@ library(magrittr)
 library(ggrepel)
 library(stringdist)
 library(survival)
-library(pec)
+library(rgdal)
+library(ggmap)
+library(rgeos)
+library(maptools)
+library(broom)
 
 fer_theme <- theme_bw() +
 	theme(text = element_text(family = "Helvetica"),
@@ -121,20 +124,29 @@ Specifically, I use the date in which a country opened an open government data p
 Although the opening date is not able to accurately measure the quantity and quality of public data, I found it to be highly correlated with both the Open Data Index and the Open Data Barometer (Spearman correlation coefficient of `r -round(odi_cor, 2)` and `r -round(obd_cor, 2)`, respectively).
 Open data portals are a good indication of the progress of open data because–by making datasets discoverable and managing metadata–they have the potential to accelerate the creation of value [@Attard2015].
 
-To obtain the web address of the open data portals were open I curated an automated search that returned the 10 first results of a Google Search in an english locale for the string "`Open Data + [country]`" for each of the 193 United Nations meber states.
-I then obtained an approximate opening date for the portal by automatically retrieving the date in which the site was first registered by the Wayback Machine, which keeps historical snapshots of billions of URLs over time.
+To obtain the web address of the open data portals were open I curated an automated search that returned the 10 first results of a Google Search in an english locale for the string "`Open Data + [country]`" for each of the 193 United Nations member states.
+I then obtained an approximate opening date for the portal by automatically retrieving the date in which the site was first registered by the Wayback Machine, which keeps historical snapshots of billions of URLs over time. 
+This data would be easily improved by performing searches in local languages. Code can be foun in [github:efcaguab/open_data_history](https://github.com/efcaguab/open_data_history).
+
+Using this methodology I found that the adoption of open government data is not homogeneous across regions (Figure 1).
+Europe seems to be at the vanguard of in terms of support for open government data portals.
+In particular there was a period of rapid growth between 2012 and 2014 when most West European countries launched their portals.
+In Asia and the Americas the largest growth occurred after 2014 and are currently on track to catch up with European countries.
+Growth in Africa and Oceania has been rather moderate and, with a few exceptions, governments are yet to embrace open data.
+Using the historical records also allow us to identify the pioneers of open data.
+The USA, UK, Norway, Australia, and New Zealand, all launched their open government data portals in the earliest dates, setting up the example to other countries to follow.
 
 ```{r}
 read_wb <- function(file, varname) {
 	file %>%
 		readr::read_csv(skip = 4) %>%
-		dplyr::select(dplyr::contains("Country Code"), 
-									dplyr::matches("[0-9]")) %>% 
+		dplyr::select(dplyr::contains("Country Code"),
+									dplyr::matches("[0-9]")) %>%
 		reshape2::melt("Country Code", variable.name = "year", value.name = "var") %>%
 		dplyr::filter(!is.na(var)) %>%
 		dplyr::group_by(`Country Code`) %>%
 		dplyr::mutate(year = as.numeric(as.character(year)),
-									last_year = max(year), 
+									last_year = max(year),
 									var = as.numeric(as.character(var))) %>%
 		dplyr::filter(year == last_year) %>%
 		dplyr::select(-last_year) %>%
@@ -146,64 +158,34 @@ netp <- read_wb("./data/wb_net_penetration.csv", "netp")
 gdp <- read_wb("./data/wb_gdp_per_capita.csv", "gdppc")
 pop <- read_wb("./data/wb_population_size.csv", "pop")
 
-
-
 study_start <- data_history$start_date %>% min(na.rm = T) - 2
 study_end <- as.Date("2017-03-28")
 surv_history <- data_history %>%
-	dplyr::left_join(netp, by = c("alpha3" = "Country Code")) %>% 
+	dplyr::left_join(netp, by = c("alpha3" = "Country Code")) %>%
 	dplyr::left_join(gdp, by = c("alpha3" = "Country Code")) %>%
-	dplyr::left_join(pop, by = c("alpha3" = "Country Code")) %>% 
+	dplyr::left_join(pop, by = c("alpha3" = "Country Code")) %>%
 	dplyr::mutate(time = 1,
 								time2 = difftime(start_date, study_start, units = "day"),
-								time2 = ifelse(is.na(time2), 
+								time2 = ifelse(is.na(time2),
 															 difftime(study_end, study_start, units = "day"),
 															 time2),
 								event = ifelse(is.na(start_date),0,1),
 								tnetp = netp + 2) %>%
 	dplyr::filter(!is.na(netp), !is.na(gdppc))
-S <- surv_history %$% 
-	Surv(time, time2, event)
 
-cm <- coxph(Surv(time, time2, event) ~ gdppc + pop + netp, data = surv_history)
-aft0w <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history)
-aft0e <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "exp")
-aft0g <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "gau")
-aft0l <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "logistic")
-aft0n <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "logn")
-aft0o <- survreg(Surv(time2, event) ~ gdppc + pop + tnetp, data = surv_history, dist = "loglog")
+aft3 <- survreg(Surv(time2, event) ~ gdppc + tnetp, data = surv_history)
+aft2 <- survreg(Surv(time2, event) ~ gdppc, data = surv_history)
+aft1 <- survreg(Surv(time2, event) ~ tnetp, data = surv_history)
 
-aft1 <- survreg(Surv(time2, event) ~  gdppc + pop , data = surv_history)
-aft2 <- survreg(Surv(time2, event) ~ pop + tnetp, data = surv_history)
-aft3w <- survreg(Surv(time2, event) ~ gdppc + tnetp, data = surv_history)
-aft3l <- survreg(Surv(time2, event) ~ gdppc + tnetp, data = surv_history, dist = "logistic")
-aft4w <- survreg(Surv(time2, event) ~ tnetp, data = surv_history)
-aft4l <- survreg(Surv(time2, event) ~ tnetp, data = surv_history, dist = "logistic")
-aft5 <- survreg(Surv(time2, event) ~ pop, data = surv_history)
-aft6 <- survreg(Surv(time2, event) ~ gdppc, data = surv_history)
 
-AIC(aft0, aft1, aft2, aft3, aft4, aft5, aft6)
-
-survfit(aft)
-a <- cox.zph(model0)
-par(mfrow = c(3, 1))
-plot(a[1], main = "gdppc")
-plot(a[2], main = "pop")
-plot(a[3], main = "netp")
-
-plot(residuals(model0, type = "deviance"), 
-		 residuals(model0, type = "martingale"))
-
-predictSurvProb(model0, surv_history, times = 1:5000)
-
-prob <- surv_history %>% 
-	dplyr::filter(is.na(start_date), 
-								region == "Europe") %T>% View %>%
-	predictSurvProb(model0, ., 
-									times = seq(difftime(study_end, study_start, units = "day"),
-															by = 365.25, length.out = 10))
+surv_history$prediction <- predict(aft3)
+surv_history$pred_se <- predict(aft1, se.fit = T)$se.fit
+surv_history$residuals <- residuals(aft3)
+surv_history %<>%
+	dplyr::mutate(optimistic = study_start + prediction - pred_se*2,
+								pesimistic = study_start + prediction + pred_se*2,
+								prediction_n = study_start + prediction)
 ```
-
 
 ```{r}
 cum_history <- data_history %>%
@@ -228,7 +210,7 @@ cum_history <- data_history %>%
 
 ```
 
-```{r, fig.height= 2.5, fig.width=3.5, fig.cap= "Realised national-level open data initiatives."}
+```{r, fig.height= 2.5, fig.width=3.5, fig.cap= "Proportion of countries for which national open government data portals exist."}
 
 lege <- cum_history %>%
 	dplyr::group_by(region) %>%
@@ -265,14 +247,197 @@ cum_history %>%
 
 ```
 
-# The pioneers
+Although informative, the regional bins do not allow us to understand the relationships between the adoption of open government data policies and potential covariates.
+I therefore constructed a model to determine how the gross domestic product per capita and the number of internet users (per 100 people) are related to the launch date of the data portals.
+Although many other factors might contribute to the progress of open data, I chose these two variables because they are likely to serve as a proxy for the capacity that countries have to implement and utilize open data.
+Specifically, I used a parametric survival regression model under the assumption that the launch date follows a Weibull distribution [@Therneau2000].
 
-```{r}
-data_history %>%
-	dplyr::arrange(start_date) %>%
-	dplyr::slice(1:10) %>%
+Although somewhat simplistic, this model already allows for some insightful information.
+First, albeit the two explanatory variables are moderately correlated, the proportion of internet users is a much stronger predictor of the portal launch date than the per-capita gross domestic product.
+
+
+```{r, eval = FALSE}
+surv_history %>%
+	dplyr::filter(!is.na(start_date)) %>%
+	dplyr::mutate(ra = residuals) %>%
+	# dplyr::filter(start_date < as.Date("2015-06-01")) %>%
+	dplyr::arrange(ra) %T>% View %>%
+	dplyr::slice(1:10)  %>%
 	dplyr::select(alpha3, address, start_date, region) %>%
 	knitr::kable()
 ```
 
-# References
+Second, by examining the model residuals and the launch date the model allows to identify open data champions.
+Countries that are "ahead of time" and launched open government data portals way before it would have been expected given their levels of internet penetration and socioeconomic status.
+Specifically, the top five is composed by Burkina Faso, Ethiopia, Pakistan, Ghana, and Bangladesh.
+
+```{r, eval = F}
+x <- surv_history %>%
+	dplyr::mutate(start_date_i = dplyr::if_else(
+		is.na(start_date),
+		study_start + prediction,
+		start_date
+	)) %>%
+	dplyr::arrange(start_date_i)
+
+d <- dplyr::data_frame(dens = ecdf(x$start_date_i)(unique(x$start_date_i)),
+											 start_date = unique(x$start_date_i)) %>%
+	dplyr::mutate(n = dens * (sum(!is.na(x$start_date_i))),
+								prop = n/nrow(x)) %>%
+	dplyr::filter(!is.na(start_date)) %>%
+	# dplyr::bind_rows(dplyr::data_frame(dens = 1,
+	# 																	 start_date = Sys.Date(),
+	# 																	 n = max(d$n),
+	# 																	 prop = max(d$prop))) %>%
+	dplyr::bind_rows(
+		dplyr::data_frame(dens = 0,
+											start_date = min(data_history$start_date-90, na.rm = T),
+											n = 0,
+											prop = 0))
+
+xupper <- surv_history %>%
+	dplyr::mutate(start_date_i = dplyr::if_else(
+		is.na(start_date),
+		study_start + prediction + pred_se * 2,
+		start_date
+	)) %>%
+	dplyr::arrange(start_date_i)
+
+dupper <- dplyr::data_frame(dens = ecdf(xupper$start_date_i)(unique(xupper$start_date_i)),
+											 start_date = unique(xupper$start_date_i)) %>%
+	dplyr::mutate(n = dens * (sum(!is.na(xupper$start_date_i))),
+								prop = n/nrow(xupper)) %>%
+	dplyr::filter(!is.na(start_date)) %>%
+	# dplyr::bind_rows(dplyr::data_frame(dens = 1,
+	# 																	 start_date = Sys.Date(),
+	# 																	 n = max(d$n),
+	# 																	 prop = max(d$prop))) %>%
+	dplyr::bind_rows(
+		dplyr::data_frame(dens = 0,
+											start_date = min(data_history$start_date-90, na.rm = T),
+											n = 0,
+											prop = 0)) %>%
+	dplyr::filter(start_date >= study_end)
+
+
+xlower <- surv_history %>%
+	dplyr::mutate(start_date_i = dplyr::if_else(
+		is.na(start_date),
+		study_start + prediction - pred_se * 2,
+		start_date
+	)) %>%
+	dplyr::arrange(start_date_i)
+
+dlower <- dplyr::data_frame(dens = ecdf(xlower$start_date_i)(unique(xlower$start_date_i)),
+											 start_date = unique(xlower$start_date_i)) %>%
+	dplyr::mutate(n = dens * (sum(!is.na(xlower$start_date_i))),
+								prop = n/nrow(xlower)) %>%
+	dplyr::filter(!is.na(start_date)) %>%
+	# dplyr::bind_rows(dplyr::data_frame(dens = 1,
+	# 																	 start_date = Sys.Date(),
+	# 																	 n = max(d$n),
+	# 																	 prop = max(d$prop))) %>%
+	dplyr::bind_rows(
+		dplyr::data_frame(dens = 0,
+											start_date = min(data_history$start_date-90, na.rm = T),
+											n = 0,
+											prop = 0)) %>%
+	dplyr::filter(start_date >= study_end)
+
+
+
+d %>%
+	ggplot(aes(x = start_date, y = dens)) +
+	geom_line() +
+	geom_line(data = dupper, linetype = 2) +
+	geom_line(data = dlower, linetype = 2) +
+	scale_color_brewer(palette = "Set1") +
+	fer_theme
+
+```
+
+Third, the model allows to forecast the expected date in which open government data portals could be implemented in the countries that have not yet done so (Figure 2).
+Under the current trajectory, the most likely outcome is that ~70% of the nations would embrace open government data portals by 2030.
+This includes all European countries and most countries in Asia, Oceania, and the Americas, but excludes a large proportion of central and west african countries, and poor and conflictive countries in Asia.
+
+```{r, results="hide"}
+categ_lab <- c("< 2010", "2010-15", "2015-20", "2020-25", "2025-30", "> 2030")
+categ_breaks <- as.Date(c("2000-01-01",
+													"2010-06-01",
+													"2015-06-01",
+													"2020-06-01",
+													"2025-06-01",
+													"2030-06-01",
+													"2070-06-01"))
+surv_history %<>%
+	dplyr::mutate(optimistic_fix = dplyr::if_else(is.na(start_date),
+																								optimistic,
+																								start_date),
+								pesimistic_fix = dplyr::if_else(is.na(start_date),
+																								pesimistic,
+																								start_date),
+								prediction_fix = dplyr::if_else(is.na(start_date),
+																								prediction_n,
+																								start_date)) %>%
+	dplyr::mutate(
+		opt_cut = cut(optimistic_fix, breaks = categ_breaks, labels = categ_lab),
+		pes_cut = cut(pesimistic_fix, breaks = categ_breaks, labels = categ_lab),
+		pre_cut = cut(prediction_fix, breaks = categ_breaks, labels = categ_lab))
+
+
+countries <- readOGR("./data/countries.geojson", "OGRGeoJSON")
+countries.df <- tidy(countries, region = "iso_a3") %>%
+	dplyr::filter(id != "ATA")
+```
+
+```{r, fig.width= 6.5, fig.height=2.2, fig.cap = "Predictions "}
+p1 <- countries.df %>%
+	dplyr::inner_join(surv_history, by = c("id" = "alpha3")) %>%
+	ggplot(aes(x = long, y = lat, group = group)) +
+	geom_polygon(aes(fill = opt_cut)) +
+	scale_fill_brewer(palette = "Reds", na.value = "grey50", name = "year of\nimplementation") +
+	scale_colour_brewer(palette = "Set1", na.value = "grey50", guide = F) +
+	fer_theme +
+	coord_quickmap() +
+	theme(axis.text = element_blank(),
+				axis.title = element_blank(),
+				axis.ticks = element_blank(),
+				panel.border = element_blank(),
+				legend.title = element_text(size = 8),
+				legend.text = element_text(size = 7),
+				legend.direction = "horizontal",
+				legend.key.size = grid::unit(0.7, "lines")) +
+	ggtitle("optimistic scenario")
+
+p2 <- countries.df %>%
+	dplyr::inner_join(surv_history, by = c("id" = "alpha3")) %>%
+	ggplot(aes(x = long, y = lat, group = group)) +
+	geom_polygon(aes(fill = pes_cut)) +
+	scale_fill_brewer(palette = "Reds", na.value = "grey50", name = "year") +
+	scale_colour_brewer(palette = "Set1", na.value = "grey50", guide = F) +
+	fer_theme +
+	coord_quickmap() +
+	theme(axis.text = element_blank(),
+				axis.title = element_blank(),
+				axis.ticks = element_blank(),
+				panel.border = element_blank()) +
+	ggtitle("pesimistic scenario")
+
+leg <- cowplot::get_legend(p1)
+
+cowplot::plot_grid(p1 + theme(legend.position = "none"),
+									 p2 + theme(legend.position = "none"),
+									 ncol = 2) %>%
+	cowplot::plot_grid(leg, ncol = 1, rel_heights = c(2, 0.2), hjust = -10)
+```
+
+A major goal of the major international organizations that promote open government data is to harness the big-data revolution to achieve the 17 goals of the 2030 Agenda for Sustainable Development.
+If indeed open government data can be used to "help end extreme poverty, combat inequality and injustice, and combat climate change", is value would be so large that it could, without a doubt, be called big-data.
+This analysis suggest that the adoption of open data could be accelerated by enabling all people to use the internet, which then can translate into creation of value when citizens demand and use public data.
+Lamentably, this analysis suggest that, unless this acceleration takes place, the countries that need it the most will also be the ones that are likely to miss it.
+
+\singlespacing
+
+## References
+
+\footnotesize
